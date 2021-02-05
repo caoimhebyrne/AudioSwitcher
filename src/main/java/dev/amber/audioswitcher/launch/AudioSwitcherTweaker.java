@@ -1,4 +1,4 @@
-package dev.asbyth.asmworkspace.tweaker;
+package dev.amber.audioswitcher.launch;
 
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
@@ -7,7 +7,7 @@ import java.util.Map;
 
 // forge warns when this annotation is missing so make it shut up
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
-public class ASMTweaker implements IFMLLoadingPlugin {
+public class AudioSwitcherTweaker implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
