@@ -23,6 +23,7 @@ public class LibraryLWJGLOpenALImpl {
 
             // Create an OpenAL instance with our sound device, or if it doesn't exist just use the default
             if(devices.contains(AudioSwitcherConfig.SELECTED_SOUND_DEVICE)) {
+                AudioSwitcher.getInstance().logger.info("Previously used sound device (" + AudioSwitcherConfig.SELECTED_SOUND_DEVICE + ") is available, using it!");
                 AL.create(AudioSwitcherConfig.SELECTED_SOUND_DEVICE, 44100, 60, false);
             } else {
                 // Fallback to default sound device, selected one isn't available
