@@ -24,12 +24,12 @@ public class LibraryLWJGLOpenALTransformer implements ITransformer {
                     if (node.getOpcode() == Opcodes.INVOKESTATIC) {
                         MethodInsnNode castedNode = (MethodInsnNode) node;
                         if (castedNode.owner.equals("org/lwjgl/openal/AL") && castedNode.name.equals("create") && castedNode.desc.equals("()V")) {
-                            method.instructions.insert(castedNode, new MethodInsnNode(Opcodes.INVOKESTATIC, "dev/amber/audioswitcher/asm/impl/LibraryLWJGLOpenALImpl", "createAL", "()V", false));
-                            method.instructions.remove(castedNode);
+                            // Overwrite the original Al.create() call
+                            method.instructions.set(castedNode, new MethodInsnNode(Opcodes.INVOKESTATIC, "dev/amber/audioswitcher/asm/impl/LibraryLWJGLOpenALImpl", "createAL", "()V", false));
+                            break;
                         }
                     }
                 }
-                break;
             }
         }
     }
