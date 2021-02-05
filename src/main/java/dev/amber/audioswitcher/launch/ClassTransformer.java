@@ -1,9 +1,9 @@
-package dev.asbyth.asmworkspace.tweaker;
+package dev.amber.audioswitcher.launch;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import dev.asbyth.asmworkspace.tweaker.asm.MinecraftTransformer;
-import dev.asbyth.asmworkspace.tweaker.transformer.ITransformer;
+import dev.amber.audioswitcher.launch.asm.LibraryLWJGLOpenALTransformer;
+import dev.amber.audioswitcher.launch.transformer.ITransformer;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +30,7 @@ public class ClassTransformer implements IClassTransformer {
 
     public ClassTransformer() {
         // any transformer will be registered here
-        registerTransformer(new MinecraftTransformer());
+        registerTransformer(new LibraryLWJGLOpenALTransformer());
     }
 
     private void registerTransformer(ITransformer transformer) {

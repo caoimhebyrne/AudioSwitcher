@@ -1,0 +1,16 @@
+[
+{
+  "modid": "audioswitcher",
+  "name": "AudioSwitcher",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["dreamhopping"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
