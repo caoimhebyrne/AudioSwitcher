@@ -1,7 +1,9 @@
 package dev.amber.audioswitcher;
 
+import dev.amber.audioswitcher.config.AudioSwitcherConfig;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.openal.ALC10;
@@ -17,7 +19,7 @@ public class AudioSwitcher {
     private static AudioSwitcher instance;
 
     public Logger logger = LogManager.getLogger("AudioSwitcher");
-    private List<String> devices = new ArrayList<>();
+    public final List<String> devices = new ArrayList<>();
 
     public static AudioSwitcher getInstance() {
         return instance;
@@ -28,14 +30,15 @@ public class AudioSwitcher {
 
         try {
             String[] availableDevices = ALC10.alcGetString(null, ALC11.ALC_ALL_DEVICES_SPECIFIER).split("\0");
-            System.out.println(Arrays.toString(availableDevices));
+            devices.addAll(Arrays.asList(availableDevices));
         } catch (Exception e) {
             logger.error("Error: " + e.getMessage());
         }
     }
 
     @Mod.EventHandler
-    public void onInit(FMLInitializationEvent e) {
+    public void onPreInit(FMLPreInitializationEvent e) {
         logger.info("Initialising AudioSwitcher...");
+        AudioSwitcherConfig.loadConfig();
     }
 }
