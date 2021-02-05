@@ -2,24 +2,22 @@ package dev.amber.audioswitcher;
 
 import dev.amber.audioswitcher.config.AudioSwitcherConfig;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALC11;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Mod(modid = "audioswitcher")
 public class AudioSwitcher {
     @Mod.Instance
     private static AudioSwitcher instance;
-
+    public final Set<String> devices = new HashSet<>();
     public Logger logger = LogManager.getLogger("AudioSwitcher");
-    public final List<String> devices = new ArrayList<>();
 
     public static AudioSwitcher getInstance() {
         return instance;
