@@ -44,11 +44,14 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude "mcmod.info"
     }
+
+    from(sourceSets.main.resources.srcDirs) {
+        rename "audioswitcher_at.cfg", "META-INF/audioswitcher_at.cfg"
+    }
 }
 
 jar {
     manifest {
-        attributes 'FMLAT': 'audioswitcher_at.cfg'
-        attributes("FMLCorePlugin": "dev.amber.audioswitcher.launch.AudioSwitcherTweaker", "ForceLoadAsMod": true, FMLCorePluginContainsFMLMod: true, "ModSide": "CLIENT")
+        attributes("FMLAT": "audioswitcher_at.cfg", "FMLCorePlugin": "dev.amber.audioswitcher.launch.AudioSwitcherTweaker", "ForceLoadAsMod": true, FMLCorePluginContainsFMLMod: true, "ModSide": "CLIENT")
     }
 }
