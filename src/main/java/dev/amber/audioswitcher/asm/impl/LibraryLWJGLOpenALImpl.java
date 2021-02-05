@@ -19,24 +19,27 @@ public class LibraryLWJGLOpenALImpl {
             AL.create();
 
             // Get all devices
-            AudioSwitcher.getInstance().getDevices();
             List<String> devices = AudioSwitcher.getInstance().devices;
+            if (devices.isEmpty()) AudioSwitcher.getInstance().getDevices();
+            devices = AudioSwitcher.getInstance().devices;
 
             // Destroy the old context
             AL.destroy();
 
-            AudioSwitcher.getInstance().logger.info("Switching to sound device: " + AudioSwitcherConfig.SELECTED_SOUND_DEVICE);
+            String soundDevice = AudioSwitcherConfig.SELECTED_SOUND_DEVICE;
+            AudioSwitcher.getInstance().logger.info("Switching to sound device: " + soundDevice);
 
             // Create an OpenAL instance with our sound device, or if it doesn't exist just use the default
-            if (devices.contains(AudioSwitcherConfig.SELECTED_SOUND_DEVICE)) {
-                AudioSwitcher.getInstance().logger.info("Previously used sound device (" + AudioSwitcherConfig.SELECTED_SOUND_DEVICE + ") is available");
-                AL.create(AudioSwitcherConfig.SELECTED_SOUND_DEVICE, 44100, 60, false);
+            if (devices.contains(soundDevice)) {
+                AudioSwitcher.getInstance().logger.info("Sound device {} is available", soundDevice);
+                AL.create(soundDevice, 44100, 60, false);
             } else {
                 // Fallback to default sound device, selected one isn't available
-                AudioSwitcher.getInstance().logger.warn("Failed to find previously selected sound device, using system default...");
+                AudioSwitcher.getInstance().logger.warn("Failed to find sound device {}, using system default", soundDevice);
                 AL.create();
             }
         } catch (Exception e) {
+            AudioSwitcher.getInstance().logger.warn("Failed to find create device!, using system default. Error: ", e);
             AL.create();
         }
     }
