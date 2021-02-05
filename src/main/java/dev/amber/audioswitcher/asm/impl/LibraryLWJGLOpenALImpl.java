@@ -5,24 +5,31 @@ import dev.amber.audioswitcher.config.AudioSwitcherConfig;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 
-import java.util.Set;
+import java.util.List;
 
 public class LibraryLWJGLOpenALImpl {
     public static void createAL() throws LWJGLException {
         try {
+            // For reloading, we can't create an AL if one already exists
+            if (AL.isCreated()) {
+                AL.destroy();
+            }
+
             // Create an OpenAL context for searching for devices
             AL.create();
 
             // Get all devices
             AudioSwitcher.getInstance().getDevices();
-            Set<String> devices = AudioSwitcher.getInstance().devices;
+            List<String> devices = AudioSwitcher.getInstance().devices;
 
             // Destroy the old context
             AL.destroy();
 
+            AudioSwitcher.getInstance().logger.info("Switching to sound device: " + AudioSwitcherConfig.SELECTED_SOUND_DEVICE);
+
             // Create an OpenAL instance with our sound device, or if it doesn't exist just use the default
             if (devices.contains(AudioSwitcherConfig.SELECTED_SOUND_DEVICE)) {
-                AudioSwitcher.getInstance().logger.info("Previously used sound device (" + AudioSwitcherConfig.SELECTED_SOUND_DEVICE + ") is available, using it!");
+                AudioSwitcher.getInstance().logger.info("Previously used sound device (" + AudioSwitcherConfig.SELECTED_SOUND_DEVICE + ") is available");
                 AL.create(AudioSwitcherConfig.SELECTED_SOUND_DEVICE, 44100, 60, false);
             } else {
                 // Fallback to default sound device, selected one isn't available
