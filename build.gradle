@@ -48,6 +48,7 @@ processResources {
 
 jar {
     manifest {
+        attributes 'FMLAT': 'audioswitcher_at.cfg'
         attributes("FMLCorePlugin": "dev.amber.audioswitcher.launch.AudioSwitcherTweaker", "ForceLoadAsMod": true, FMLCorePluginContainsFMLMod: true, "ModSide": "CLIENT")
     }
 }

@@ -7,8 +7,9 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-public class LibraryLWJGLOpenALTransformer implements ITransformer {
+import java.util.ListIterator;
 
+public class LibraryLWJGLOpenALTransformer implements ITransformer {
     @Override
     public String[] getClassName() {
         return new String[]{"paulscode.sound.libraries.LibraryLWJGLOpenAL"};
@@ -17,15 +18,13 @@ public class LibraryLWJGLOpenALTransformer implements ITransformer {
     @Override
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
-            String methodName = mapMethodName(classNode, method);
-
-            if (methodName.equals("init")) {
-                for (AbstractInsnNode node : method.instructions.toArray()) {
-                    if (node.getOpcode() == Opcodes.INVOKESTATIC) {
-                        MethodInsnNode castedNode = (MethodInsnNode) node;
-                        if (castedNode.owner.equals("org/lwjgl/openal/AL") && castedNode.name.equals("create") && castedNode.desc.equals("()V")) {
-                            // Overwrite the original Al.create() call
-                            method.instructions.set(castedNode, new MethodInsnNode(Opcodes.INVOKESTATIC, "dev/amber/audioswitcher/asm/impl/LibraryLWJGLOpenALImpl", "createAL", "()V", false));
+            if (method.name.equals("init")) {
+                final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
+                while (iterator.hasNext()) {
+                    final AbstractInsnNode next = iterator.next();
+                    if (next instanceof MethodInsnNode && next.getOpcode() == Opcodes.INVOKESTATIC) {
+                        if (((MethodInsnNode) next).name.equals("create")) {
+                            method.instructions.set(next, new MethodInsnNode(Opcodes.INVOKESTATIC, "dev/amber/audioswitcher/asm/impl/LibraryLWJGLOpenALImpl", "createAL", "()V", false));
                             break;
                         }
                     }
