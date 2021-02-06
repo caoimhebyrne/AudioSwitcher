@@ -15,17 +15,22 @@ public class LibraryLWJGLOpenALImpl {
                 AL.destroy();
             }
 
-            // Create an OpenAL context for searching for devices
-            AL.create();
-
             // Get all devices
             List<String> devices = AudioSwitcher.getInstance().devices;
-            if (devices.isEmpty()) AudioSwitcher.getInstance().getDevices();
-            devices = AudioSwitcher.getInstance().devices;
 
-            // Destroy the old context
-            AL.destroy();
+            // Only scan for new devices if there is none found, it's already reloaded by the GUI
+            if (devices.isEmpty()) {
+                // Create an OpenAL context for searching for devices
+                AL.create();
 
+                AudioSwitcher.getInstance().getDevices();
+                devices = AudioSwitcher.getInstance().devices;
+
+                // Destroy the old context
+                AL.destroy();
+            }
+
+            // Get the sound device that we should switch to
             String soundDevice = AudioSwitcherConfig.SELECTED_SOUND_DEVICE;
             AudioSwitcher.getInstance().logger.info("Switching to sound device: " + soundDevice);
 
