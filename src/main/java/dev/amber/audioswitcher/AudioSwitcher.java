@@ -1,11 +1,19 @@
 package dev.amber.audioswitcher;
 
 import dev.amber.audioswitcher.config.AudioSwitcherConfig;
+import dev.amber.audioswitcher.util.VersionChecker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreenOptionsSounds;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -28,9 +36,12 @@ public class AudioSwitcher {
     private static AudioSwitcher instance;
     public List<String> devices = new ArrayList<>();
     public Logger logger = LogManager.getLogger("AudioSwitcher");
+    public VersionChecker versionChecker;
     int buttonYPosition = 0;
     boolean previousWasOptionsSounds = false;
     boolean isPatcherInstalled = false;
+    boolean updateAvailable = true;
+    boolean sentUpdateMessage = false;
 
     public static AudioSwitcher getInstance() {
         return instance;
@@ -56,6 +67,28 @@ public class AudioSwitcher {
         MinecraftForge.EVENT_BUS.register(this);
 
         isPatcherInstalled = Loader.isModLoaded("patcher");
+
+        logger.info("Checking for updates...");
+
+        versionChecker = new VersionChecker();
+        updateAvailable = versionChecker.checkForUpdate();
+
+        if (updateAvailable) logger.info("New update available! Version: {}", versionChecker.updateInfo.versionString);
+    }
+
+    @SubscribeEvent
+    public void onEntityJoin(EntityJoinWorldEvent event) {
+        if (event.entity instanceof EntityPlayerSP && !sentUpdateMessage) {
+            sentUpdateMessage = true;
+            ChatStyle linkStyle = new ChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, versionChecker.updateInfo.url)).setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Download update")));
+
+            event.entity.addChatMessage(new ChatComponentText(
+                    EnumChatFormatting.DARK_RED + "[" +
+                            EnumChatFormatting.RED + "AudioSwitcher" +
+                            EnumChatFormatting.DARK_RED + "]" +
+                            EnumChatFormatting.GRAY + " An AudioSwitcher update is available! (" + versionChecker.updateInfo.versionString + ") Click here for more info")
+                    .setChatStyle(linkStyle));
+        }
     }
 
     @SubscribeEvent
