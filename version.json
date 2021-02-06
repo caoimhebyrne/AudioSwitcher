@@ -1,12 +1,12 @@
 {
     "1.8.9": {
-        "version": 2,
-        "versionString": "1.0.1",
+        "version": 1,
+        "versionString": "1.0.0",
         "url": "https://github.com/dreamhopping/AudioSwitcher/releases/"
     },
     "1.12.2": {
-        "version": 2,
-        "versionString": "1.0.1",
+        "version": 1,
+        "versionString": "1.0.0",
         "url": "https://github.com/dreamhopping/AudioSwitcher/releases/"
     }
 }
