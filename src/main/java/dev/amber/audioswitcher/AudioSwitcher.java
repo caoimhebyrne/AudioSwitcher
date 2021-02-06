@@ -40,7 +40,7 @@ public class AudioSwitcher {
     int buttonYPosition = 0;
     boolean previousWasOptionsSounds = false;
     boolean isPatcherInstalled = false;
-    boolean updateAvailable = true;
+    VersionChecker.UpdateJsonResponse updateInfo = null;
     boolean sentUpdateMessage = false;
 
     public static AudioSwitcher getInstance() {
@@ -69,24 +69,30 @@ public class AudioSwitcher {
         isPatcherInstalled = Loader.isModLoaded("patcher");
 
         logger.info("Checking for updates...");
-
         versionChecker = new VersionChecker();
-        updateAvailable = versionChecker.checkForUpdate();
 
-        if (updateAvailable) logger.info("New update available! Version: {}", versionChecker.updateInfo.versionString);
+        Executors.newSingleThreadExecutor().submit(() -> {
+            updateInfo = versionChecker.checkForUpdate();
+
+            if (updateInfo != null) {
+                logger.info("New update available! Version: {}", updateInfo.versionString);
+            } else {
+                logger.info("No updates available!");
+            }
+        });
     }
 
     @SubscribeEvent
     public void onEntityJoin(EntityJoinWorldEvent event) {
-        if (event.entity instanceof EntityPlayerSP && !sentUpdateMessage) {
+        if (event.entity instanceof EntityPlayerSP && !sentUpdateMessage && updateInfo != null) {
             sentUpdateMessage = true;
-            ChatStyle linkStyle = new ChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, versionChecker.updateInfo.url)).setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Download update")));
+            ChatStyle linkStyle = new ChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, updateInfo.url)).setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Download update")));
 
             event.entity.addChatMessage(new ChatComponentText(
                     EnumChatFormatting.DARK_RED + "[" +
                             EnumChatFormatting.RED + "AudioSwitcher" +
                             EnumChatFormatting.DARK_RED + "]" +
-                            EnumChatFormatting.GRAY + " An AudioSwitcher update is available! (" + versionChecker.updateInfo.versionString + ") Click here for more info")
+                            EnumChatFormatting.GRAY + " An update is available! (" + updateInfo.versionString + ") Click here for more info")
                     .setChatStyle(linkStyle));
         }
     }

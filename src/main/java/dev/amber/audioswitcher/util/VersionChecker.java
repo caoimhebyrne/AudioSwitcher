@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import net.minecraft.client.Minecraft;
 
+import javax.annotation.Nullable;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -11,12 +12,11 @@ import java.util.Map;
 
 public class VersionChecker {
     private final String jsonURL = "https://raw.githubusercontent.com/dreamhopping/AudioSwitcher/master/version.json";
-    public UpdateJsonResponse updateInfo;
-
     public String minecraftVersion = Minecraft.getMinecraft().getVersion();
     public int modVersion = 1;
 
-    public boolean checkForUpdate() {
+    @Nullable
+    public UpdateJsonResponse checkForUpdate() {
         try {
             URL url = new URL(jsonURL);
             Type responseType = new TypeToken<Map<String, UpdateJsonResponse>>() {}.getType();
@@ -26,11 +26,11 @@ public class VersionChecker {
 
             reader.close();
 
-            updateInfo = response.get(minecraftVersion);
-            return updateInfo.version > modVersion;
+            UpdateJsonResponse updateInfo = response.get(minecraftVersion);
+            return updateInfo.version > modVersion ? updateInfo : null;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 
