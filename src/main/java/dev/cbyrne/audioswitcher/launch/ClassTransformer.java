@@ -1,9 +1,9 @@
-package dev.amber.audioswitcher.launch;
+package dev.cbyrne.audioswitcher.launch;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import dev.amber.audioswitcher.asm.LibraryLWJGLOpenALTransformer;
-import dev.amber.audioswitcher.launch.transformer.ITransformer;
+import dev.cbyrne.audioswitcher.asm.LibraryLWJGLOpenALTransformer;
+import dev.cbyrne.audioswitcher.launch.transformer.ITransformer;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

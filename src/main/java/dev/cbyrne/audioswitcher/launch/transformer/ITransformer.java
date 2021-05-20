@@ -1,4 +1,4 @@
-package dev.amber.audioswitcher.launch.transformer;
+package dev.cbyrne.audioswitcher.launch.transformer;
 
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import org.objectweb.asm.tree.ClassNode;

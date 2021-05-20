@@ -1,7 +1,7 @@
-package dev.amber.audioswitcher.asm.impl;
+package dev.cbyrne.audioswitcher.asm.impl;
 
-import dev.amber.audioswitcher.AudioSwitcher;
-import dev.amber.audioswitcher.config.AudioSwitcherConfig;
+import dev.cbyrne.audioswitcher.AudioSwitcher;
+import dev.cbyrne.audioswitcher.config.AudioSwitcherConfig;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 

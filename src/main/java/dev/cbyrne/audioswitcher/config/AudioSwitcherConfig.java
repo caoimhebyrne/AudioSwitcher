@@ -1,4 +1,4 @@
-package dev.amber.audioswitcher.config;
+package dev.cbyrne.audioswitcher.config;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;

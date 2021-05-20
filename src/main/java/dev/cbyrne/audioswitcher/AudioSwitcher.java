@@ -1,7 +1,7 @@
-package dev.amber.audioswitcher;
+package dev.cbyrne.audioswitcher;
 
-import dev.amber.audioswitcher.config.AudioSwitcherConfig;
-import dev.amber.audioswitcher.util.VersionChecker;
+import dev.cbyrne.audioswitcher.config.AudioSwitcherConfig;
+import dev.cbyrne.audioswitcher.util.VersionChecker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;

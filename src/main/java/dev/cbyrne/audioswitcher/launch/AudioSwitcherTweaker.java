@@ -1,4 +1,4 @@
-package dev.amber.audioswitcher.launch;
+package dev.cbyrne.audioswitcher.launch;
 
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;

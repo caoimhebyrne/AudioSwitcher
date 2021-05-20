@@ -1,4 +1,4 @@
-package dev.amber.audioswitcher.util;
+package dev.cbyrne.audioswitcher.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -11,7 +11,7 @@ import java.net.URL;
 import java.util.Map;
 
 public class VersionChecker {
-    private final String jsonURL = "https://raw.githubusercontent.com/dreamhopping/AudioSwitcher/master/version.json";
+    private final String jsonURL = "https://raw.githubusercontent.com/cbyrneee/AudioSwitcher/main/version.json";
     public String minecraftVersion = Minecraft.getMinecraft().getVersion();
     public int modVersion = 1;
 
