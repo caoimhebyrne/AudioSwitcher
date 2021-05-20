@@ -1,6 +1,6 @@
-package dev.amber.audioswitcher.asm;
+package dev.cbyrne.audioswitcher.asm;
 
-import dev.amber.audioswitcher.launch.transformer.ITransformer;
+import dev.cbyrne.audioswitcher.launch.transformer.ITransformer;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -24,7 +24,7 @@ public class LibraryLWJGLOpenALTransformer implements ITransformer {
                     final AbstractInsnNode next = iterator.next();
                     if (next instanceof MethodInsnNode && next.getOpcode() == Opcodes.INVOKESTATIC) {
                         if (((MethodInsnNode) next).name.equals("create")) {
-                            method.instructions.set(next, new MethodInsnNode(Opcodes.INVOKESTATIC, "dev/amber/audioswitcher/asm/impl/LibraryLWJGLOpenALImpl", "createAL", "()V", false));
+                            method.instructions.set(next, new MethodInsnNode(Opcodes.INVOKESTATIC, "dev/cbyrne/audioswitcher/asm/impl/LibraryLWJGLOpenALImpl", "createAL", "()V", false));
                             break;
                         }
                     }

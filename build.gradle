@@ -24,7 +24,7 @@ minecraft {
     runDir = "run"
     mappings = project.mcpVersion
     makeObfSourceJar = false
-    clientJvmArgs += "-Dfml.coreMods.load=dev.amber.audioswitcher.launch.AudioSwitcherTweaker"
+    clientJvmArgs += "-Dfml.coreMods.load=dev.cbyrne.audioswitcher.launch.AudioSwitcherTweaker"
 }
 
 processResources {
@@ -52,6 +52,6 @@ processResources {
 
 jar {
     manifest {
-        attributes("FMLAT": "audioswitcher_at.cfg", "FMLCorePlugin": "dev.amber.audioswitcher.launch.AudioSwitcherTweaker", "ForceLoadAsMod": true, FMLCorePluginContainsFMLMod: true, "ModSide": "CLIENT")
+        attributes("FMLAT": "audioswitcher_at.cfg", "FMLCorePlugin": "dev.cbyrne.audioswitcher.launch.AudioSwitcherTweaker", "ForceLoadAsMod": true, FMLCorePluginContainsFMLMod: true, "ModSide": "CLIENT")
     }
 }
