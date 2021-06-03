@@ -19,12 +19,10 @@ public class LibraryLWJGLOpenALTransformer implements ITransformer {
     public void transform(ClassNode classNode, String name) {
         for (MethodNode method : classNode.methods) {
             if (method.name.equals("init")) {
-                final ListIterator<AbstractInsnNode> iterator = method.instructions.iterator();
-                while (iterator.hasNext()) {
-                    final AbstractInsnNode next = iterator.next();
-                    if (next instanceof MethodInsnNode && next.getOpcode() == Opcodes.INVOKESTATIC) {
-                        if (((MethodInsnNode) next).name.equals("create")) {
-                            method.instructions.set(next, new MethodInsnNode(Opcodes.INVOKESTATIC, "dev/cbyrne/audioswitcher/asm/impl/LibraryLWJGLOpenALImpl", "createAL", "()V", false));
+                for (AbstractInsnNode insnNode : method.instructions.toArray()) {
+                    if (insnNode instanceof MethodInsnNode && insnNode.getOpcode() == Opcodes.INVOKESTATIC) {
+                        if (((MethodInsnNode) insnNode).name.equals("create")) {
+                            method.instructions.set(insnNode, new MethodInsnNode(Opcodes.INVOKESTATIC, "dev/cbyrne/audioswitcher/asm/impl/LibraryLWJGLOpenALImpl", "createAL", "()V", false));
                             break;
                         }
                     }

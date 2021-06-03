@@ -2,35 +2,40 @@ package dev.cbyrne.audioswitcher.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import dev.cbyrne.audioswitcher.Metadata;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
 public class VersionChecker {
-    private final String jsonURL = "https://raw.githubusercontent.com/cbyrneee/AudioSwitcher/main/version.json";
-    public String minecraftVersion = Minecraft.getMinecraft().getVersion();
-    public int modVersion = 1;
+    private final String minecraftVersion = Minecraft.getMinecraft().getVersion();
+    private final URL jsonUrl;
 
+    public VersionChecker(String jsonUrl) throws MalformedURLException {
+        this.jsonUrl = new URL(jsonUrl);
+    }
+
+    /**
+     * Checks for an update through the JSON url provided in the constructor
+     *
+     * @return An instance of {@link UpdateJsonResponse} if an update is available, otherwise null
+     */
     @Nullable
-    public UpdateJsonResponse checkForUpdate() {
-        try {
-            URL url = new URL(jsonURL);
-            Type responseType = new TypeToken<Map<String, UpdateJsonResponse>>() {}.getType();
+    public UpdateJsonResponse checkForUpdate() throws IOException {
+        Type responseType = new TypeToken<Map<String, UpdateJsonResponse>>() {
+        }.getType();
 
-            InputStreamReader reader = new InputStreamReader(url.openStream());
+        try (InputStreamReader reader = new InputStreamReader(this.jsonUrl.openStream())) {
             Map<String, UpdateJsonResponse> response = new Gson().fromJson(reader, responseType);
 
-            reader.close();
-
             UpdateJsonResponse updateInfo = response.get(minecraftVersion);
-            return updateInfo.version > modVersion ? updateInfo : null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            return (updateInfo.version > Metadata.version) ? updateInfo : null;
         }
     }
 
