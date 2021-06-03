@@ -5,10 +5,8 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 import java.util.Map;
 
-// forge warns when this annotation is missing so make it shut up
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
 public class AudioSwitcherTweaker implements IFMLLoadingPlugin {
-
     @Override
     public String[] getASMTransformerClass() {
         return new String[]{ClassTransformer.class.getName()};
@@ -26,7 +24,6 @@ public class AudioSwitcherTweaker implements IFMLLoadingPlugin {
 
     @Override
     public void injectData(Map<String, Object> data) {
-
     }
 
     @Override

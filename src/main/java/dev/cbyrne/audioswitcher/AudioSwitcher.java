@@ -34,14 +34,16 @@ import java.util.stream.Collectors;
 public class AudioSwitcher {
     @Mod.Instance
     private static AudioSwitcher instance;
+
     public List<String> devices = new ArrayList<>();
     public Logger logger = LogManager.getLogger("AudioSwitcher");
     public VersionChecker versionChecker;
-    int buttonYPosition = 0;
-    boolean previousWasOptionsSounds = false;
-    boolean isPatcherInstalled = false;
-    VersionChecker.UpdateJsonResponse updateInfo = null;
-    boolean sentUpdateMessage = false;
+    private VersionChecker.UpdateJsonResponse updateInfo = null;
+
+    private int buttonYPosition = 0;
+    private boolean previousWasOptionsSounds = false;
+    private boolean isPatcherInstalled = false;
+    private boolean sentUpdateMessage = false;
 
     public static AudioSwitcher getInstance() {
         return instance;
@@ -50,13 +52,17 @@ public class AudioSwitcher {
     public void getDevices() {
         try {
             String[] availableDevices = ALC10.alcGetString(null, ALC11.ALC_ALL_DEVICES_SPECIFIER).split("\0");
-            List<String> availableDevicesList = Arrays.asList(availableDevices);
 
-            devices = availableDevicesList.stream().distinct().collect(Collectors.toList());
+            devices = Arrays.stream(availableDevices).distinct().collect(Collectors.toList());
             logger.info("Found devices: {}", Arrays.toString(devices.toArray()));
         } catch (Exception e) {
-            logger.error("Error: " + e.getMessage());
+            logger.error("An exception occurred whilst finding devices:", e);
         }
+    }
+
+    private void refreshDevices() {
+        if (devices.isEmpty())
+            getDevices();
     }
 
     @Mod.EventHandler
@@ -68,18 +74,25 @@ public class AudioSwitcher {
 
         isPatcherInstalled = Loader.isModLoaded("patcher");
 
-        logger.info("Checking for updates...");
-        versionChecker = new VersionChecker();
+        try {
+            logger.info("Checking for updates...");
+            versionChecker = new VersionChecker("https://raw.githubusercontent.com/cbyrneee/AudioSwitcher/master/version.json");
 
-        Executors.newSingleThreadExecutor().submit(() -> {
-            updateInfo = versionChecker.checkForUpdate();
-
-            if (updateInfo != null) {
-                logger.info("New update available! Version: {}", updateInfo.versionString);
-            } else {
-                logger.info("No updates available!");
-            }
-        });
+            Executors.newSingleThreadExecutor().submit(() -> {
+                try {
+                    updateInfo = versionChecker.checkForUpdate();
+                    if (updateInfo != null) {
+                        logger.info("New update available! Version: {}", updateInfo.versionString);
+                    } else {
+                        logger.info("No updates available!");
+                    }
+                } catch (Exception e) {
+                    logger.error("Failed to check for updates:", e);
+                }
+            });
+        } catch (Exception e) {
+            logger.error("Failed to check for updates:", e);
+        }
     }
 
     @SubscribeEvent
@@ -89,11 +102,11 @@ public class AudioSwitcher {
             ChatStyle linkStyle = new ChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, updateInfo.url)).setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Download update")));
 
             event.entity.addChatMessage(new ChatComponentText(
-                    EnumChatFormatting.DARK_RED + "[" +
-                            EnumChatFormatting.RED + "AudioSwitcher" +
-                            EnumChatFormatting.DARK_RED + "]" +
-                            EnumChatFormatting.GRAY + " An update is available! (" + updateInfo.versionString + ") Click here for more info")
-                    .setChatStyle(linkStyle));
+                EnumChatFormatting.DARK_RED + "[" +
+                    EnumChatFormatting.RED + "AudioSwitcher" +
+                    EnumChatFormatting.DARK_RED + "]" +
+                    EnumChatFormatting.GRAY + " An update is available! (" + updateInfo.versionString + ") Click here for more info")
+                .setChatStyle(linkStyle));
         }
     }
 
@@ -102,12 +115,9 @@ public class AudioSwitcher {
         if (event.gui instanceof GuiScreenOptionsSounds) {
             previousWasOptionsSounds = true;
 
-            // Refresh devices when the menu is opened
             getDevices();
 
-            // The sounds gui was just initialised, add our button
             String soundDevice = AudioSwitcherConfig.SELECTED_SOUND_DEVICE;
-
             if (soundDevice == null || soundDevice.isEmpty()) {
                 refreshDevices();
                 soundDevice = devices.isEmpty() ? "Default Sound Device" : devices.get(0);
@@ -186,12 +196,6 @@ public class AudioSwitcher {
 
                 event.setCanceled(true);
             }
-        }
-    }
-
-    private void refreshDevices() {
-        if (devices.isEmpty()) {
-            getDevices();
         }
     }
 }

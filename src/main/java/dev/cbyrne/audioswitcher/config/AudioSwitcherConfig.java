@@ -14,12 +14,14 @@ public class AudioSwitcherConfig {
     public static void saveConfig() {
         Configuration configuration = new Configuration(configFile);
         updateConfig(configuration, false);
+
         configuration.save();
     }
 
     public static void loadConfig() {
         Configuration configuration = new Configuration(configFile);
         configuration.load();
+
         updateConfig(configuration, true);
     }
 
