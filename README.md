@@ -1,5 +1,19 @@
-## AudioSwitcher
-A mod for 1.8.9 & 1.12.2 to switch between audio devices inside of Minecraft
+<img width="427" height="240" src="https://raw.githubusercontent.com/cbyrneee/AudioSwitcher/master/.github/images/screenshot.png" alt="AudioSwitcher Screenshot"/>
 
-### [Download](https://github.com/dreamhopping/AudioSwitcher/releases)
-![screenshot](https://repository-images.githubusercontent.com/336261992/6a76d100-680c-11eb-8e2d-35f989bca0ad)
+# AudioSwitcher
+
+AudioSwitcher is a mod for 1.8.9 and 1.12.2 which allows you to switch audio output devices inside of Minecraft
+
+## Installation
+
+1. Download the latest version for your version from
+   the [releases page](https://github.com/dreamhopping/AudioSwitcher/releases)
+2. Open your ``.minecraft/mods`` folder and drag the .jar file into it
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+[GPL 3.0](https://choosealicense.com/licenses/gpl-3.0)
