@@ -1,4 +1,4 @@
-package dev.cbyrne.audioswitcher.asm.impl;
+package dev.cbyrne.audioswitcher.transformer.impl;
 
 import dev.cbyrne.audioswitcher.AudioSwitcher;
 import dev.cbyrne.audioswitcher.config.AudioSwitcherConfig;
@@ -19,7 +19,7 @@ public class LibraryLWJGLOpenALImpl {
             if (devices.isEmpty()) {
                 AL.create();
 
-                AudioSwitcher.getInstance().getDevices();
+                AudioSwitcher.getInstance().fetchAvailableDevicesUncached();
                 devices = AudioSwitcher.getInstance().devices;
 
                 AL.destroy();

@@ -2,7 +2,7 @@ package dev.cbyrne.audioswitcher.launch;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import dev.cbyrne.audioswitcher.asm.LibraryLWJGLOpenALTransformer;
+import dev.cbyrne.audioswitcher.transformer.LibraryLWJGLOpenALTransformer;
 import dev.cbyrne.audioswitcher.launch.transformer.ITransformer;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.apache.logging.log4j.LogManager;
@@ -22,9 +22,7 @@ public class ClassTransformer implements IClassTransformer {
     }
 
     private void registerTransformer(ITransformer transformer) {
-        for (String cls : transformer.getClassName()) {
-            transformerMap.put(cls, transformer);
-        }
+        transformerMap.put(transformer.getClassName(), transformer);
     }
 
     @Override

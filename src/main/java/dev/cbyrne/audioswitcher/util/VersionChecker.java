@@ -15,10 +15,14 @@ import java.util.Map;
 
 public class VersionChecker {
     private final String minecraftVersion = Minecraft.getMinecraft().getVersion();
-    private final URL jsonUrl;
+    @Nullable private URL jsonUrl;
 
-    public VersionChecker(String jsonUrl) throws MalformedURLException {
-        this.jsonUrl = new URL(jsonUrl);
+    public VersionChecker(String jsonUrl) {
+        try {
+            this.jsonUrl = new URL(jsonUrl);
+        } catch (MalformedURLException e) {
+            this.jsonUrl = null;
+        }
     }
 
     /**
@@ -31,6 +35,7 @@ public class VersionChecker {
         Type responseType = new TypeToken<Map<String, UpdateJsonResponse>>() {
         }.getType();
 
+        if (jsonUrl == null) return null;
         try (InputStreamReader reader = new InputStreamReader(this.jsonUrl.openStream())) {
             Map<String, UpdateJsonResponse> response = new Gson().fromJson(reader, responseType);
 

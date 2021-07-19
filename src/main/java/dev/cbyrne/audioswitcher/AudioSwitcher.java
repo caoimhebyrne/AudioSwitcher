@@ -1,5 +1,6 @@
 package dev.cbyrne.audioswitcher;
 
+import dev.cbyrne.audioswitcher.alc.ALCHelper;
 import dev.cbyrne.audioswitcher.config.AudioSwitcherConfig;
 import dev.cbyrne.audioswitcher.util.VersionChecker;
 import net.minecraft.client.Minecraft;
@@ -32,67 +33,47 @@ import java.util.stream.Collectors;
 
 @Mod(modid = "audioswitcher")
 public class AudioSwitcher {
+    @SuppressWarnings("unused")
     @Mod.Instance
     private static AudioSwitcher instance;
-
-    public List<String> devices = new ArrayList<>();
-    public Logger logger = LogManager.getLogger("AudioSwitcher");
-    public VersionChecker versionChecker;
-    private VersionChecker.UpdateJsonResponse updateInfo = null;
 
     private int buttonYPosition = 0;
     private boolean previousWasOptionsSounds = false;
     private boolean isPatcherInstalled = false;
     private boolean sentUpdateMessage = false;
+    private VersionChecker.UpdateJsonResponse updateInfo = null;
+
+    public Logger logger = LogManager.getLogger("AudioSwitcher");
+    public VersionChecker versionChecker = new VersionChecker("https://raw.githubusercontent.com/cbyrneee/AudioSwitcher/master/version.json");;
+
+    public ALCHelper alcHelper = new ALCHelper();
+    public List<String> devices = new ArrayList<>();
 
     public static AudioSwitcher getInstance() {
         return instance;
     }
 
-    public void getDevices() {
-        try {
-            String[] availableDevices = ALC10.alcGetString(null, ALC11.ALC_ALL_DEVICES_SPECIFIER).split("\0");
-
-            devices = Arrays.stream(availableDevices).distinct().collect(Collectors.toList());
-            logger.info("Found devices: {}", Arrays.toString(devices.toArray()));
-        } catch (Exception e) {
-            logger.error("An exception occurred whilst finding devices:", e);
-        }
-    }
-
-    private void refreshDevices() {
-        if (devices.isEmpty())
-            getDevices();
-    }
-
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         logger.info("Initialising AudioSwitcher...");
-
-        AudioSwitcherConfig.loadConfig();
-        MinecraftForge.EVENT_BUS.register(this);
-
         isPatcherInstalled = Loader.isModLoaded("patcher");
 
-        try {
-            logger.info("Checking for updates...");
-            versionChecker = new VersionChecker("https://raw.githubusercontent.com/cbyrneee/AudioSwitcher/master/version.json");
+        AudioSwitcherConfig.loadConfig();
 
-            Executors.newSingleThreadExecutor().submit(() -> {
-                try {
-                    updateInfo = versionChecker.checkForUpdate();
-                    if (updateInfo != null) {
-                        logger.info("New update available! Version: {}", updateInfo.versionString);
-                    } else {
-                        logger.info("No updates available!");
-                    }
-                } catch (Exception e) {
-                    logger.error("Failed to check for updates:", e);
+        MinecraftForge.EVENT_BUS.register(this);
+        Executors.newSingleThreadExecutor().submit(() -> {
+            try {
+                logger.info("Checking for updates...");
+                updateInfo = versionChecker.checkForUpdate();
+                if (updateInfo != null) {
+                    logger.info("New update available! Version: {}", updateInfo.versionString);
+                } else {
+                    logger.info("No updates available!");
                 }
-            });
-        } catch (Exception e) {
-            logger.error("Failed to check for updates:", e);
-        }
+            } catch (Exception e) {
+                logger.error("Failed to check for updates:", e);
+            }
+        });
     }
 
     @SubscribeEvent
@@ -114,12 +95,10 @@ public class AudioSwitcher {
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
         if (event.gui instanceof GuiScreenOptionsSounds) {
             previousWasOptionsSounds = true;
-
-            getDevices();
+            fetchAvailableDevicesCached();
 
             String soundDevice = AudioSwitcherConfig.SELECTED_SOUND_DEVICE;
             if (soundDevice == null || soundDevice.isEmpty()) {
-                refreshDevices();
                 soundDevice = devices.isEmpty() ? "Default Sound Device" : devices.get(0);
             }
 
@@ -166,7 +145,7 @@ public class AudioSwitcher {
         if (event.gui instanceof GuiScreenOptionsSounds) {
             // Check if the button pressed was our button
             if (event.button.id == 19238) {
-                refreshDevices();
+                fetchAvailableDevicesUncached();
                 if (devices.isEmpty()) return;
 
                 String soundDevice = AudioSwitcherConfig.SELECTED_SOUND_DEVICE;
@@ -197,5 +176,14 @@ public class AudioSwitcher {
                 event.setCanceled(true);
             }
         }
+    }
+
+    public void fetchAvailableDevicesCached() {
+        devices = alcHelper.getAvailableDevices(true);
+    }
+
+    public void fetchAvailableDevicesUncached() {
+        devices = alcHelper.getAvailableDevices(false);
+        logger.info(Arrays.toString(devices.toArray()));
     }
 }
