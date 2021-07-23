@@ -38,6 +38,7 @@ public class LibraryLWJGLOpenALImpl {
             }
         } catch (Exception e) {
             AudioSwitcher.getInstance().logger.warn("Failed to find create device!, using system default. Error: ", e);
+            AL.destroy();
             AL.create();
         }
     }
