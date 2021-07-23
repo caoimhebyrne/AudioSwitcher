@@ -10,6 +10,9 @@ AudioSwitcher is a mod for 1.8.9 and 1.12.2 which allows you to switch audio out
    the [releases page](https://github.com/dreamhopping/AudioSwitcher/releases)
 2. Open your ``.minecraft/mods`` folder and drag the .jar file into it
 
+## Incompatibilities
+- macOS does not expose sound devices to LWJGL correctly, especially if running under Rosetta. The current sound device is only returned, meaning that AudioSwitcher will not work on macOS.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
