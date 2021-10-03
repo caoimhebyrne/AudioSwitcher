@@ -7,7 +7,7 @@ AudioSwitcher is a mod for 1.8.9 and 1.12.2 which allows you to switch audio out
 ## Installation
 
 1. Download the latest version for your version from
-   the [releases page](https://github.com/dreamhopping/AudioSwitcher/releases)
+   the [releases page](https://github.com/cbyrneee/AudioSwitcher/releases)
 2. Open your ``.minecraft/mods`` folder and drag the .jar file into it
 
 ## Incompatibilities
