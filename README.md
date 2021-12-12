@@ -1,6 +1,8 @@
+### AudioSwitcher is deprecated and will soon be replaced by Sk1er LLC's Patcher in v1.8, [download it here](https://sk1er.club/mods/patcher) when 1.8 releases.
+
 <img width="427" height="240" src="https://raw.githubusercontent.com/cbyrneee/AudioSwitcher/master/.github/images/screenshot.png" alt="AudioSwitcher Screenshot"/>
 
-# AudioSwitcher
+## AudioSwitcher
 
 AudioSwitcher is a mod for 1.8.9 and 1.12.2 which allows you to switch audio output devices inside of Minecraft
 
